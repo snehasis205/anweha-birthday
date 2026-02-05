@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy Birthday Anwesha</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI, sans-serif}
+body{
+    height:100vh; overflow:hidden; color:white;
+    background: radial-gradient(circle at top,#1a1a40,#000814);
+}
+
+/* Center Card */
+.card{
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:75%; padding:40px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    border-radius:20px; text-align:center;
+    box-shadow:0 0 40px rgba(255,255,255,0.15);
+}
+
+h1{font-size:3em;margin-bottom:15px;color:#ffd6e0}
+#text{min-height:120px;font-size:1.2em;line-height:1.6em}
+
+/* Balloons */
+.balloon{
+    position:absolute; bottom:-150px;
+    width:60px;height:80px;border-radius:50%;
+    animation:rise 10s linear infinite;
+}
+.balloon:after{
+    content:''; position:absolute; width:2px;height:50px;
+    background:white; top:80px; left:29px;
+}
+@keyframes rise{
+    to{transform:translateY(-120vh)}
+}
+
+/* Cake */
+.cake{margin:25px auto; position:relative; width:200px;height:120px}
+.layer{
+    position:absolute; bottom:0;
+    width:200px;height:60px;background:#ff8fab;
+    border-radius:12px;
+}
+.icing{
+    position:absolute; top:0;
+    width:200px;height:30px;background:white;
+    border-radius:12px 12px 0 0;
+}
+.candle{
+    position:absolute; top:-35px; left:95px;
+    width:10px;height:30px;background:#ffd60a;
+}
+.flame{
+    position:absolute; top:-10px;
+    width:10px;height:10px;background:orange;
+    border-radius:50%; animation:flicker .2s infinite alternate;
+}
+@keyframes flicker{to{transform:scale(1.3)}}
+.cut{animation:cutCake 1.8s forwards}
+@keyframes cutCake{to{transform:translateX(45px) rotate(8deg);opacity:.7}}
+
+/* Confetti */
+.confetti{
+    position:absolute;width:8px;height:8px;
+    animation:fall 4s linear forwards;
+}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* Button */
+button{
+    margin-top:15px;padding:10px 25px;border:none;
+    border-radius:25px;background:#ffd6e0;color:#000;
+    cursor:pointer;font-size:1em;
+}
+
+/* Fireworks canvas */
+canvas{position:absolute;top:0;left:0;z-index:-1}
+</style>
+</head>
+
+<body>
+
+<canvas id="fw"></canvas>
+
+<div class="card">
+    <h1>Happy Birthday Anwesha 🎂</h1>
+    <div id="text"></div>
+
+    <div class="cake">
+        <div class="icing"></div>
+        <div class="layer" id="slice"></div>
+        <div class="candle"><div class="flame" id="flame"></div></div>
+    </div>
+
+    <button onclick="celebrate()">Start Celebration 🎉</button>
+</div>
+
+<script>
+// Typing message
+const msg = `Dear Anwesha,
+
+You bring warmth, comfort, and happiness wherever you go.
+May your life be filled with magical moments, soft smiles, and beautiful memories.
+You deserve love, joy, and every reason to celebrate today and always.
+
+Happy Birthday to someone truly special.`;
+
+let i=0;
+(function type(){
+    if(i<msg.length){
+        text.innerHTML+=msg[i++];
+        setTimeout(type,28);
+    }
+})();
+
+// Balloons
+setInterval(()=>{
+    let b=document.createElement('div');
+    b.className='balloon';
+    b.style.left=Math.random()*100+'vw';
+    b.style.background=`hsl(${Math.random()*360},70%,60%)`;
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),10000);
+},700);
+
+// Confetti burst
+function confetti(){
+    for(let i=0;i<120;i++){
+        let c=document.createElement('div');
+        c.className='confetti';
+        c.style.left=Math.random()*100+'vw';
+        c.style.background=`hsl(${Math.random()*360},80%,60%)`;
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),4000);
+    }
+}
+
+// Fireworks
+const canvas=document.getElementById('fw');
+const ctx=canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
+
+function firework(){
+    let x=Math.random()*canvas.width;
+    let y=Math.random()*canvas.height/2;
+    for(let i=0;i<30;i++){
+        let angle=Math.random()*2*Math.PI;
+        let speed=Math.random()*4;
+        let vx=Math.cos(angle)*speed;
+        let vy=Math.sin(angle)*speed;
+        particle(x,y,vx,vy);
+    }
+}
+function particle(x,y,vx,vy){
+    let life=60;
+    function draw(){
+        if(life--<=0)return;
+        ctx.fillStyle="white";
+        ctx.fillRect(x,y,2,2);
+        x+=vx; y+=vy;
+        requestAnimationFrame(draw);
+    }
+    draw();
+}
+
+// Celebrate
+function celebrate(){
+    slice.classList.add('cut');
+    flame.style.display='none';
+    confetti();
+    for(let i=0;i<8;i++){
+        setTimeout(firework,i*300);
+    }
+}
+</script>
+
+</body>
+</html>
